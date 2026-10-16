@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MovieSurvey.MainPage"
+             Title="Анкета кинозрителя">
+
+	<ScrollView>
+		<VerticalStackLayout Padding="20" Spacing="10">
+
+			<Label Text="Анкета кинозрителя"
+			       FontSize="26"
+			       FontAttributes="Bold" />
+
+			<Image x:Name="CinemaImage"
+			       Source="cinema.png"
+			       Aspect="AspectFit"
+			       HeightRequest="120" />
+
+			<Grid RowDefinitions="Auto,Auto"
+			      ColumnDefinitions="*,*"
+			      ColumnSpacing="10">
+				<Label Grid.Row="0" Grid.Column="0"
+				       Text="Имя *"
+				       FontSize="14"
+				       FontAttributes="Bold" />
+				<Label Grid.Row="0" Grid.Column="1"
+				       Text="E-mail" />
+				<Entry x:Name="NameEntry"
+				       Grid.Row="1" Grid.Column="0"
+				       Placeholder="Ваше имя"
+				       Keyboard="Text"
+				       MaxLength="40"
+				       TextChanged="OnFormChanged" />
+				<Entry x:Name="EmailEntry"
+				       Grid.Row="1" Grid.Column="1"
+				       Placeholder="name@mail.ru"
+				       Keyboard="Email"
+				       MaxLength="60"
+				       IsEnabled="{Binding Source={x:Reference NewsSwitch}, Path=IsToggled, Mode=OneWay}"
+				       TextChanged="OnFormChanged" />
+			</Grid>
+
+			<Grid ColumnDefinitions="60,*" Margin="0,5">
+				<Switch x:Name="NewsSwitch"
+				        Grid.Column="0"
+				        IsToggled="False"
+				        OnColor="Green"
+				        Toggled="OnFormChanged" />
+				<Label Grid.Column="1"
+				       Text="Получать новости (включает поле e-mail)"
+				       VerticalOptions="Center" />
+			</Grid>
+
+			<Label Text="Любимый жанр *" Margin="0,5,0,0" />
+			<Picker x:Name="GenrePicker"
+			        Title="Выберите жанр"
+			        SelectedIndexChanged="OnFormChanged">
+				<Picker.ItemsSource>
+					<x:Array Type="{x:Type x:String}">
+						<x:String>Комедия</x:String>
+						<x:String>Драма</x:String>
+						<x:String>Фантастика</x:String>
+						<x:String>Боевик</x:String>
+					</x:Array>
+				</Picker.ItemsSource>
+			</Picker>
+
+			<Label Text="Как часто смотрите фильмы? *" Margin="0,5,0,0" />
+			<VerticalStackLayout Spacing="0">
+				<RadioButton x:Name="RadioRare"
+				             Content="Редко"
+				             GroupName="Frequency"
+				             Value="Редко"
+				             CheckedChanged="OnFormChanged" />
+				<RadioButton x:Name="RadioOften"
+				             Content="Регулярно"
+				             GroupName="Frequency"
+				             Value="Регулярно"
+				             CheckedChanged="OnFormChanged" />
+				<RadioButton x:Name="RadioDaily"
+				             Content="Каждый день"
+				             GroupName="Frequency"
+				             Value="Каждый день"
+				             CheckedChanged="OnFormChanged" />
+			</VerticalStackLayout>
+
+			<Label Text="Что ещё любите смотреть?" Margin="0,5,0,0" />
+			<Grid RowDefinitions="Auto,Auto"
+			      ColumnDefinitions="40,*">
+				<CheckBox x:Name="SeriesCheck"
+				          Grid.Row="0" Grid.Column="0"
+				          IsChecked="False"
+				          Color="Blue"
+				          CheckedChanged="OnFormChanged" />
+				<Label Grid.Row="0" Grid.Column="1"
+				       Text="Сериалы"
+				       VerticalOptions="Center" />
+				<CheckBox x:Name="AnimeCheck"
+				          Grid.Row="1" Grid.Column="0"
+				          IsChecked="False"
+				          Color="Blue"
+				          CheckedChanged="OnFormChanged" />
+				<Label Grid.Row="1" Grid.Column="1"
+				       Text="Аниме"
+				       VerticalOptions="Center" />
+			</Grid>
+
+			<Label Text="Дата последнего похода в кино" Margin="0,5,0,0" />
+			<DatePicker x:Name="VisitDatePicker"
+			            Format="dd.MM.yyyy"
+			            MinimumDate="2000-01-01"
+			            MaximumDate="2030-12-31"
+			            Date="2025-01-01"
+			            DateSelected="OnFormChanged" />
+
+			<Label Text="Оценка любви к кино (0-10)" Margin="0,5,0,0" />
+			<Grid ColumnDefinitions="*,40">
+				<Slider x:Name="RatingSlider"
+				        Grid.Column="0"
+				        Minimum="0"
+				        Maximum="10"
+				        Value="5"
+				        ValueChanged="OnFormChanged" />
+				<Label Grid.Column="1"
+				       Text="{Binding Source={x:Reference RatingSlider}, Path=Value, Mode=OneWay, StringFormat='{0:F0}'}"
+				       VerticalOptions="Center" />
+			</Grid>
+
+			<Label Text="Сколько фильмов в месяц смотрите?" Margin="0,5,0,0" />
+			<HorizontalStackLayout Spacing="15">
+				<Stepper x:Name="FilmsStepper"
+				         Minimum="0"
+				         Maximum="30"
+				         Increment="1"
+				         Value="2"
+				         ValueChanged="OnFormChanged" />
+				<Label Text="{Binding Source={x:Reference FilmsStepper}, Path=Value, Mode=OneWay, StringFormat='{0:F0}'}"
+				       VerticalOptions="Center" />
+			</HorizontalStackLayout>
+
+			<Label Text="Любимый фильм и почему" Margin="0,5,0,0" />
+			<Editor x:Name="CommentEditor"
+			        Placeholder="Напишите пару слов"
+			        AutoSize="TextChanges"
+			        MaxLength="300"
+			        TextChanged="OnFormChanged" />
+
+			<Grid ColumnDefinitions="*,*"
+			      ColumnSpacing="10"
+			      Margin="0,10">
+				<Button x:Name="ShowButton"
+				        Grid.Column="0"
+				        Text="Показать результат"
+				        Clicked="OnShowClicked" />
+				<Button x:Name="ClearButton"
+				        Grid.Column="1"
+				        Text="Очистить"
+				        IsEnabled="False"
+				        Clicked="OnClearClicked" />
+			</Grid>
+
+			<Label x:Name="ResultLabel"
+			       IsVisible="False" />
+
+		</VerticalStackLayout>
+	</ScrollView>
+</ContentPage>
